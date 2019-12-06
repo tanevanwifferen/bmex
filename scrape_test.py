@@ -14,8 +14,8 @@ def get_data(start, end, symbols, channel="trade"):
     """
     Pulls data and creates the necessary directories to store it. 
     """
-    path = os.getcwd()
     base = "BITMEX"
+    path = os.getcwd()
 
     if not os.path.isdir(f"{path}/{base}"):
         os.mkdir(base)
@@ -24,7 +24,6 @@ def get_data(start, end, symbols, channel="trade"):
         if not os.path.isdir(f"{path}/{base}/{sym}"):
             os.mkdir(f"{path}/{base}/{sym}")
 
-    print(f"Downloading: {channel}s")
     while start <= end:
         current = start.strftime("%Y%m%d")
         count = 0
