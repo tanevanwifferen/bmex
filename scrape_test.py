@@ -13,7 +13,7 @@ endpoint = "https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/{}/{}.csv.
 
 def _validate(symbols):
     """
-    Validates that the symbol/indice exists/existed on BitMEX.
+    Validates that the symbol/index exists/existed on BitMEX.
     """
 
     r = requests.get(
