@@ -5,7 +5,7 @@ lets you download both quotes (best bid/ask) as well as trades for all symbols a
 Example: `python bmex.py --symbols XBTUSD ETHUSD --channels quotes trades --begin 2018-10-30 --end 2019-11-01`
 
 ```
-Current_Directory # where you run the code
+current_directory # where you run the code
   └──BITMEX/
       ├── ETHUSD
       │   ├── quotes
