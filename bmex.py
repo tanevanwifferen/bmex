@@ -12,7 +12,7 @@ import time
 endpoint = "https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/{}/{}.csv.gz"
 
 
-def _validates_dates(start, end):
+def _validate_dates(start, end):
     """
     Validates start and end times for successfuly polling data from BitMEX servers.
     """
@@ -54,7 +54,7 @@ def get_data(start, end, symbols, channel="trade"):
     Polls data and creates the necessary directories to store it. 
     """
 
-    start, end = _validates_dates(start, end)
+    start, end = _validate_dates(start, end)
     _validate_symbols(symbols)
 
     base = "BITMEX"
