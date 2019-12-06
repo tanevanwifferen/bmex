@@ -5,15 +5,38 @@ import gzip
 import os
 import time
 import requests
+import sys
 
 # https://public.bitmex.com/?prefix=data/trade/
 endpoint = "https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/{}/{}.csv.gz"
+
+
+def _validate(symbols):
+    """
+    Validates that the symbol/indice exists/existed on BitMEX.
+    """
+
+    r = requests.get(
+        "https://www.bitmex.com/api/v1/instrument?count=500&reverse=false"
+    ).json()
+
+    valid = [x["symbol"] for x in r]
+
+    for symbol in symbols:
+        if symbol not in valid:
+            sys.exit(f"{symbol} is not a valid symbol.")
 
 
 def get_data(start, end, symbols, channel="trade"):
     """
     Pulls data and creates the necessary directories to store it. 
     """
+
+    _validate(symbols)
+
+    if end < start:
+        raise Exception("End-date can't be earlier than start-date.")
+
     base = "BITMEX"
     path = os.getcwd()
 
