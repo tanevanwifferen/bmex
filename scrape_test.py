@@ -21,11 +21,11 @@ def _validate(symbols):
     ).json()
 
     valid = [x["symbol"] for x in r]
-
-    for symbol in symbols:
-        if symbol not in valid:
-            sys.exit(f"{symbol} is not a valid symbol.")
-
+    not_valid = [symb for symb in symbols if symb not in valid]
+    
+    if not_valid:
+        sys.exit(f"Not valid symbol(s): {not_valid}.")
+        
 
 def get_data(start, end, symbols, channel="trade"):
     """
