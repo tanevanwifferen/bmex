@@ -79,8 +79,12 @@ def get_data(start, end, symbols, channel="trade"):
             else:
                 count += 1
                 if count == 10:
+                    if r.status_code == 404:
+                        sys.exit(
+                            f"\nDownload fail for: {start.date()} - data does not exist (yet).\n"
+                        )
                     r.raise_for_status()
-                print(f"Error processing: {start} - {r.status_code}, retrying.")
+                print(f"{r.status_code} error processing: {start.date()} - retrying.")
                 time.sleep(10)
 
         with open(current, "wb") as fp:
