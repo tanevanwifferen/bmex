@@ -1,3 +1,12 @@
+"""
+bmex.py
+
+A script to download and store historical quotes + trades data from BitMEX. 
+
+Copyright (c) 2019, Diogo Flores.
+License: MIT
+"""
+
 import argparse
 import csv
 from datetime import datetime as dt
