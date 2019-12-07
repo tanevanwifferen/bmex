@@ -58,6 +58,56 @@ def _validate_symbols(symbols: set):
         sys.exit(f"Not valid symbol(s): {not_valid}.")
 
 
+def _unzip(current: str, r):
+    """
+    Unzip downloaded .tar.gz file and parse the data inside.
+    """
+    with open(current, "wb") as fp:
+        fp.write(r.content)
+
+    with gzip.open(current, "rb") as fp:
+        data = fp.read()
+
+    with open(current, "wb") as fp:
+        fp.write(data)
+
+
+def _store(start: str, symbols: set, channel: str, path: str, base: str):
+    """
+    Stores the data as .csv files on a pre-defined (see README.md) directory structure.
+    """
+    c = start.strftime("%Y%m%d")  # Same as 'current' - saves passing one more arg.
+    new = True
+
+    with open(c, "r") as inp:
+        reader = csv.reader(inp)
+        for row in reader:
+            # Pandas couldn't parse the dates - The next line fixes that.
+            row[0] = row[0].replace("D", " ", 1)
+            if row[1] in symbols:
+                location = (
+                    f"{path}/{base}/{row[1]}/{channel}s/{start.year}/{start.month}"
+                )
+
+                if not os.path.isdir(location):
+                    os.makedirs(location)
+
+                _file = f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv"
+                # If the file already exists, remove it before creating a new one
+                # and appending to it.
+                # This is a safety measure to ensure data integrity, in case the
+                # program is run with the same start and end dates multiple times.
+                if new:
+                    if os.path.exists(_file):
+                        os.remove(_file)
+                    new = False
+
+                with open(_file, "a") as out:
+                    write = csv.writer(out)
+                    write.writerow(row)
+    os.remove(c)
+
+
 def get_data(start: dt, end: dt, symbols: set, channel: str):
     """
     Polls data and creates the necessary directories to store it. 
@@ -96,48 +146,10 @@ def get_data(start: dt, end: dt, symbols: set, channel: str):
                 print(f"{r.status_code} error processing: {start.date()} - retrying.")
                 time.sleep(10)
 
-        with open(current, "wb") as fp:
-            fp.write(r.content)
-
-        with gzip.open(current, "rb") as fp:
-            data = fp.read()
-
-        with open(current, "wb") as fp:
-            fp.write(data)
-
-        c = current
-        new = True
-        with open(current, "r") as inp:
-            reader = csv.reader(inp)
-            for row in reader:
-                # Pandas couldn't parse the dates - The next line fixes that.
-                row[0] = row[0].replace("D", " ", 1)
-
-                if row[1] in symbols:
-                    location = (
-                        f"{path}/{base}/{row[1]}/{channel}s/{start.year}/{start.month}"
-                    )
-
-                    _file = f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv"
-
-                    if not os.path.isdir(location):
-                        os.makedirs(location)
-
-                    # If the file already exists, remove it before creating a new one
-                    # and appending to it.
-                    # This is a safety measure to ensure data integrity, in case the
-                    # program is run with the same start and end dates multiple times.
-                    if new:
-                        if os.path.exists(_file):
-                            os.remove(_file)
-                        new = False
-
-                    with open(_file, "a") as out:
-                        write = csv.writer(out)
-                        write.writerow(row)
+        _unzip(current, r)
+        _store(start, symbols, channel, path, base)
 
         print(f"Processed {channel}s: {str(start)[:10]}")
-        os.remove(current)
         start += timedelta(days=1)
 
 
