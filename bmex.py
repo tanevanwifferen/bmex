@@ -142,7 +142,7 @@ def get_data(start, end, symbols, channel="trade"):
 
 
 def main(args):
-    start = dt.strptime(args.begin, "%Y-%m-%d")
+    start = dt.strptime(args.start, "%Y-%m-%d")
     end = dt.strptime(args.end, "%Y-%m-%d")
 
     # Some protection for possible duplicates.
@@ -163,7 +163,6 @@ def parse_arguments():
         description="Download and store BitMEX historical data."
     )
     parser.add_argument(
-        "-s",
         "--symbols",
         nargs="+",
         required=True,
@@ -171,7 +170,6 @@ def parse_arguments():
         help="Symbols/indices to download.",
     )
     parser.add_argument(
-        "-c",
         "--channels",
         nargs="+",
         required=True,
@@ -180,15 +178,13 @@ def parse_arguments():
         help="Choose between 'quotes' or 'trades' channel. Both are allowed.",
     )
     parser.add_argument(
-        "-b",
-        "--begin",
+        "--start",
         type=str,
         required=True,
         metavar="",
         help="From when to retrieve data. Format: YYYY-MM-DD",
     )
     parser.add_argument(
-        "-e",
         "--end",
         type=str,
         required=True,
