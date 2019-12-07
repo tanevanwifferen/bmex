@@ -105,7 +105,7 @@ def get_data(start, end, symbols, channel="trade"):
                     )
                     if not os.path.isdir(location):
                         os.makedirs(location)
-                    with open(f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv", "w+") as out:
+                    with open(f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv", "a") as out:
                         write = csv.writer(out)
                         write.writerow(row)
 
