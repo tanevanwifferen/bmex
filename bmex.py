@@ -108,9 +108,9 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
     os.remove(c)
 
 
-def get_data(start: dt, end: dt, symbols: set, channel: str):
+def poll_data(start: dt, end: dt, symbols: set, channel: str):
     """
-    Polls data and creates the necessary directories to store it. 
+    Polls data from BitMEX servers. 
     """
 
     start, end = _validate_dates(start, end)
@@ -162,9 +162,9 @@ def main(args):
     channels = set(args.channels)
 
     if "trades" in channels:
-        get_data(start, end, symbols, channel="trade")
+        poll_data(start, end, symbols, channel="trade")
     if "quotes" in channels:
-        get_data(start, end, symbols, channel="quote")
+        poll_data(start, end, symbols, channel="quote")
 
     print("-" * 80)
     print("Finished.\n")
