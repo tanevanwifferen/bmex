@@ -1,6 +1,6 @@
 # bmex
 
-Lets you download both historical quotes (top bid/ask) as well as trades for all symbols and indices (including delisted ones) from BitMEX + stores by creating the directory structure show below.
+Lets you download historical data, both quotes (top bid/ask) and trades, for all symbols and indices (including delisted ones) from BitMEX + stores it by creating the directory structure shown below.
 
 Example: `python bmex.py --symbols XBTUSD ETHUSD --channels quotes trades --begin 2018-10-30 --end 2019-11-01`
 
