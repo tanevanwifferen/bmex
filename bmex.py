@@ -21,7 +21,7 @@ import time
 endpoint = "https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/{}/{}.csv.gz"
 
 
-def _validate_dates(start, end):
+def _validate_dates(start: dt, end: dt):
     """
     Validates start and end dates prior to polling data from BitMEX servers.
     """
@@ -42,7 +42,7 @@ def _validate_dates(start, end):
     return start, end
 
 
-def _validate_symbols(symbols):
+def _validate_symbols(symbols: set):
     """
     Validates that each symbol/index exists/existed on BitMEX.
     """
@@ -58,7 +58,7 @@ def _validate_symbols(symbols):
         sys.exit(f"Not valid symbol(s): {not_valid}.")
 
 
-def get_data(start, end, symbols, channel="trade"):
+def get_data(start: dt, end: dt, symbols: set, channel: str):
     """
     Polls data and creates the necessary directories to store it. 
     """
