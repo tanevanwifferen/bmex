@@ -129,11 +129,14 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
 
 def poll_data(start: dt, end: dt, symbols: set, channel: str):
     """
-    Polls data from BitMEX servers. 
+    Polls data from BitMEX servers.
     """
 
     start, end = _validate_dates(start, end)
     _validate_symbols(symbols)
+
+    # This function "should" be called from _store(), but since _store() is called
+    # N (days) times, I placed the function call here for performance sake.
     base, path = _make_dirs(symbols)
 
     print("-" * 80)
