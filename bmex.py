@@ -110,10 +110,10 @@ def get_data(start, end, symbols, channel="trade"):
                     if not os.path.isdir(location):
                         os.makedirs(location)
 
-                    # If the file already exists, remove it before appending to it.
-                    # This is a safety measure in case we run the program with the same
-                    # dates multiple times. Otherwise we would end up with incorrect
-                    # data.
+                    # If the file already exists, remove it before creating a new one
+                    # and appending to it.
+                    # This is a safety measure to ensure data integrity, in case the
+                    # program is run with the same start and end dates multiple times.
                     if new:
                         if os.path.exists(_file):
                             os.remove(_file)
