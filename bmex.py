@@ -58,6 +58,25 @@ def _validate_symbols(symbols: set):
         sys.exit(f"Not valid symbol(s): {not_valid}.")
 
 
+def _make_dirs(symbols: set):
+    """
+    Creates a base directory and one sub-directory for each symbol, to be
+    populated with historical data.
+    """
+
+    base = "BITMEX"
+    path = os.getcwd()
+
+    if not os.path.isdir(f"{path}/{base}"):
+        os.mkdir(base)
+
+    for sym in symbols:
+        if not os.path.isdir(f"{path}/{base}/{sym}"):
+            os.mkdir(f"{path}/{base}/{sym}")
+
+    return base, path
+
+
 def _unzip(current: str, r):
     """
     Unzip downloaded .tar.gz file and parse the data inside.
@@ -115,16 +134,7 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str):
 
     start, end = _validate_dates(start, end)
     _validate_symbols(symbols)
-
-    base = "BITMEX"
-    path = os.getcwd()
-
-    if not os.path.isdir(f"{path}/{base}"):
-        os.mkdir(base)
-
-    for sym in symbols:
-        if not os.path.isdir(f"{path}/{base}/{sym}"):
-            os.mkdir(f"{path}/{base}/{sym}")
+    base, path = _make_dirs(symbols)
 
     print("-" * 80)
     print(f"Start processing {channel}s:\n")
