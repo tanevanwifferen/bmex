@@ -93,6 +93,7 @@ def get_data(start, end, symbols, channel="trade"):
             fp.write(data)
 
         c = current
+        new = True
         with open(current, "r") as inp:
             reader = csv.reader(inp)
             for row in reader:
@@ -103,9 +104,22 @@ def get_data(start, end, symbols, channel="trade"):
                     location = (
                         f"{path}/{base}/{row[1]}/{channel}s/{start.year}/{start.month}"
                     )
+
+                    _file = f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv"
+
                     if not os.path.isdir(location):
                         os.makedirs(location)
-                    with open(f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv", "a") as out:
+
+                    # If the file already exists, remove it before appending to it.
+                    # This is a safety measure in case we run the program with the same
+                    # dates multiple times. Otherwise we would end up with incorrect
+                    # data.
+                    if new:
+                        if os.path.exists(_file):
+                            os.remove(_file)
+                        new = False
+
+                    with open(_file, "a") as out:
                         write = csv.writer(out)
                         write.writerow(row)
 
