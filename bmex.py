@@ -145,7 +145,7 @@ def main(args):
     start = dt.strptime(args.start, "%Y-%m-%d")
     end = dt.strptime(args.end, "%Y-%m-%d")
 
-    # Some protection for possible duplicates.
+    # Remove possible duplicates.
     symbols = set(args.symbols)
     channels = set(args.channels)
 
