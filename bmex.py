@@ -1,7 +1,7 @@
 """
 bmex.py
 
-A script to download and store historical quotes + trades data from BitMEX. 
+A script to download and store historical data (quotes + trades) from BitMEX. 
 
 Copyright (c) 2019, Diogo Flores.
 License: MIT
