@@ -23,7 +23,7 @@ endpoint = "https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/{}/{}.csv.
 
 def _validate_dates(start, end):
     """
-    Validates start and end times for successfuly polling data from BitMEX servers.
+    Validates start and end dates prior to polling data from BitMEX servers.
     """
 
     # Earliest date of data available.
