@@ -58,17 +58,26 @@ def _validate_symbols(symbols: set):
         sys.exit(f"Not valid symbol(s): {not_valid}.")
 
 
-def _make_dirs(symbols: set):
+def _make_dirs(symbols: set, save_to: str = None):
     """
     Creates a base directory and one sub-directory for each symbol, to be
     populated with historical data.
     """
 
     base = "BITMEX"
-    path = os.getcwd()
+    path = save_to
+
+    if path:
+        if not os.path.exists(path):
+            sys.exit("\nError: The path you provided does not exist.\n")
+    else:
+        path = os.getcwd()
 
     if not os.path.isdir(f"{path}/{base}"):
-        os.mkdir(base)
+        try:
+            os.mkdir(f"{path}/{base}")
+        except PermissionError:
+            sys.exit(f"\nError: You don't have permissions to write on {path}\n")
 
     for sym in symbols:
         if not os.path.isdir(f"{path}/{base}/{sym}"):
@@ -127,7 +136,7 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
     os.remove(c)
 
 
-def poll_data(start: dt, end: dt, symbols: set, channel: str):
+def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str):
     """
     Polls data from BitMEX servers.
     """
@@ -137,7 +146,7 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str):
 
     # This function "should" be called from _store(), but since _store() is called
     # N (days) times, I placed the function call here for performance sake.
-    base, path = _make_dirs(symbols)
+    base, path = _make_dirs(symbols, save_to)
 
     print("-" * 80)
     print(f"Start processing {channel}s:\n")
@@ -176,6 +185,7 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str):
 def main(args):
     start = dt.strptime(args.start, "%Y-%m-%d")
     end = dt.strptime(args.end, "%Y-%m-%d")
+    save_to = args.save_to
 
     # Remove possible duplicates.
     symbols = set(args.symbols)
@@ -183,9 +193,9 @@ def main(args):
 
     report = {}
     if "trades" in channels:
-        report["trades"] = poll_data(start, end, symbols, channel="trade")
+        report["trades"] = poll_data(start, end, symbols, "trade", save_to)
     if "quotes" in channels:
-        report["quotes"] = poll_data(start, end, symbols, channel="quote")
+        report["quotes"] = poll_data(start, end, symbols, "quote", save_to)
 
     print("-" * 80)
     print("Finished.\n")
@@ -228,6 +238,12 @@ def parse_arguments():
         required=True,
         metavar="",
         help="Until when to retrieve data. Format: YYYY-MM-DD",
+    )
+    parser.add_argument(
+        "--save_to",
+        type=str,
+        metavar="",
+        help="Provide a full path for where to store the retrieved data. (optional)",
     )
 
     arguments = parser.parse_args()
