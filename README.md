@@ -38,3 +38,6 @@ current_directory # where you run the code
                   └── 11
                       └── 2018-11-01.csv
 ```
+## Notes
+- In addition to the parameters shown in the example above, you can pass an extra parameter "--save_to" to create the directory structure at a preferred path.
+- Confirm that you have the necessary storage space. To give you an idea, as of December 2019, a full backfill of only XBTUSD will require ~125G of free space (~75G quotes + ~50G trades).
