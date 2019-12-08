@@ -86,17 +86,17 @@ def _make_dirs(symbols: set, save_to: str = None):
     return base, path
 
 
-def _unzip(current: str, r):
+def _unzip(temp: str, r):
     """
     Unzip downloaded .tar.gz file and parse the data inside.
     """
-    with open(current, "wb") as fp:
+    with open(temp, "wb") as fp:
         fp.write(r.content)
 
-    with gzip.open(current, "rb") as fp:
+    with gzip.open(temp, "rb") as fp:
         data = fp.read()
 
-    with open(current, "wb") as fp:
+    with open(temp, "wb") as fp:
         fp.write(data)
 
 
@@ -104,10 +104,10 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
     """
     Stores the data as .csv files on a pre-defined (see README.md) directory structure.
     """
-    c = start.strftime("%Y%m%d")  # Same as 'current' - saves passing one more arg.
+    name = start.strftime("%Y%m%d")  # Same as 'temp' - saves passing one more arg.
     new = True
 
-    with open(c, "r") as inp:
+    with open(name, "r") as inp:
         reader = csv.reader(inp)
         for row in reader:
             # Pandas couldn't parse the dates - The next line fixes that.
@@ -120,7 +120,8 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
                 if not os.path.isdir(location):
                     os.makedirs(location)
 
-                _file = f"{location}/{c[:4]}-{c[4:6]}-{c[6:]}.csv"
+                _file = f"{location}/{name[:4]}-{name[4:6]}-{name[6:]}.csv"
+
                 # If the file already exists, remove it before creating a new one
                 # and appending to it.
                 # This is a safety measure to ensure data integrity, in case the
@@ -133,7 +134,7 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
                 with open(_file, "a") as out:
                     write = csv.writer(out)
                     write.writerow(row)
-    os.remove(c)
+    os.remove(name)
 
 
 def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str = None):
@@ -151,10 +152,13 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str = Non
     print("-" * 80)
     print(f"Start processing {channel}s:\n")
     while start <= end:
-        current = start.strftime("%Y%m%d")
+        # BitMEX names each zipped file by its date in the format below.
+        # We must download it as such and then unzip it and extract the data,
+        # hence the "temp" variable name.
+        temp = start.strftime("%Y%m%d")
         count = 0
         while True:
-            r = requests.get(endpoint.format(channel, current))
+            r = requests.get(endpoint.format(channel, temp))
             if r.status_code == 200:
                 break
             else:
@@ -173,7 +177,7 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str = Non
                 print(f"{r.status_code} error processing: {start.date()} - retrying.")
                 time.sleep(10)
 
-        _unzip(current, r)
+        _unzip(temp, r)
         _store(start, symbols, channel, path, base)
 
         print(f"Processed {channel}s: {str(start)[:10]}")
