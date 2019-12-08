@@ -162,13 +162,15 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str):
                             return f"Failed to download: {start.date()} - data not (yet) available."
                     r.raise_for_status()
                 print(f"{r.status_code} error processing: {start.date()} - retrying.")
-                time.sleep(1)
+                time.sleep(10)
 
         _unzip(current, r)
         _store(start, symbols, channel, path, base)
 
         print(f"Processed {channel}s: {str(start)[:10]}")
         start += timedelta(days=1)
+
+    return "Success - all data downloaded and stored."
 
 
 def main(args):
@@ -181,19 +183,17 @@ def main(args):
 
     report = {}
     if "trades" in channels:
-        result = poll_data(start, end, symbols, channel="trade")
-        if result:
-            report["trades"] = result
+        report["trades"] = poll_data(start, end, symbols, channel="trade")
     if "quotes" in channels:
-        result = poll_data(start, end, symbols, channel="quote")
-        if result:
-            report["quotes"] = result
+        report["quotes"] = poll_data(start, end, symbols, channel="quote")
 
     print("-" * 80)
     print("Finished.\n")
-    if report:
-        for k, v in report.items():
-            print(f"{k}: {v}")
+    print("Report")
+    print("------")
+    for k, v in report.items():
+        print(f"{k}: {v}")
+    print()
 
 
 def parse_arguments():
