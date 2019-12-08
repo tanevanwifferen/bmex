@@ -214,14 +214,12 @@ def parse_arguments():
         "--symbols",
         nargs="+",
         required=True,
-        metavar="",
         help="Symbols/indices to download.",
     )
     parser.add_argument(
         "--channels",
         nargs="+",
         required=True,
-        metavar="",
         choices=["quotes", "trades"],
         help="Choose between 'quotes' or 'trades' channel. Both are allowed.",
     )
@@ -229,20 +227,17 @@ def parse_arguments():
         "--start",
         type=str,
         required=True,
-        metavar="",
         help="From when to retrieve data. Format: YYYY-MM-DD",
     )
     parser.add_argument(
         "--end",
         type=str,
         required=True,
-        metavar="",
         help="Until when to retrieve data. Format: YYYY-MM-DD",
     )
     parser.add_argument(
         "--save_to",
         type=str,
-        metavar="",
         help="Provide a full path for where to store the retrieved data. (optional)",
     )
 
