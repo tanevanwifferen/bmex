@@ -152,12 +152,17 @@ def poll_data(start: dt, end: dt, symbols: set, channel: str):
                 count += 1
                 if count == 10:
                     if r.status_code == 404:
-                        sys.exit(
-                            f"\nDownload fail for: {start.date()} - data does not exist (yet).\n"
-                        )
+                        # Data for today or yesterday might yet not be available.
+                        today = dt.today()
+                        yesterday = today - timedelta(1)
+                        if (
+                            start.date() == today.date()
+                            or start.date() == yesterday.date()
+                        ):
+                            return f"Failed to download: {start.date()} - data not (yet) available."
                     r.raise_for_status()
                 print(f"{r.status_code} error processing: {start.date()} - retrying.")
-                time.sleep(10)
+                time.sleep(1)
 
         _unzip(current, r)
         _store(start, symbols, channel, path, base)
@@ -174,13 +179,21 @@ def main(args):
     symbols = set(args.symbols)
     channels = set(args.channels)
 
+    report = {}
     if "trades" in channels:
-        poll_data(start, end, symbols, channel="trade")
+        result = poll_data(start, end, symbols, channel="trade")
+        if result:
+            report["trades"] = result
     if "quotes" in channels:
-        poll_data(start, end, symbols, channel="quote")
+        result = poll_data(start, end, symbols, channel="quote")
+        if result:
+            report["quotes"] = result
 
     print("-" * 80)
     print("Finished.\n")
+    if report:
+        for k, v in report.items():
+            print(f"{k}: {v}")
 
 
 def parse_arguments():
