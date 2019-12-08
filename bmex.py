@@ -136,7 +136,7 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
     os.remove(c)
 
 
-def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str):
+def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str = None):
     """
     Polls data from BitMEX servers.
     """
@@ -211,10 +211,7 @@ def parse_arguments():
         description="Download and store BitMEX historical data."
     )
     parser.add_argument(
-        "--symbols",
-        nargs="+",
-        required=True,
-        help="Symbols/indices to download.",
+        "--symbols", nargs="+", required=True, help="Symbols/indices to download."
     )
     parser.add_argument(
         "--channels",
