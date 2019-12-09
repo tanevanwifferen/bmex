@@ -34,7 +34,7 @@ def _validate_dates(start: dt, end: dt):
         raise Exception("End-date can't be earlier than start-date.")
 
     if start < min_date:
-        raise Exception("Start-date can't be earlier than {min_date.date()}")
+        raise Exception(f"Start-date can't be earlier than {min_date.date()}")
 
     if end > today:
         end = today
