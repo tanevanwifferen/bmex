@@ -104,10 +104,10 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
     """
     Stores the data as .csv files on a pre-defined (see README.md) directory structure.
     """
-    name = start.strftime("%Y%m%d")  # Same as 'temp' - saves passing one more arg.
+    temp = start.strftime("%Y%m%d")  # Saves passing 'temp' as an argument.
     new = True
 
-    with open(name, "r") as inp:
+    with open(temp, "r") as inp:
         reader = csv.reader(inp)
         for row in reader:
             # Pandas couldn't parse the dates - The next line fixes that.
@@ -120,7 +120,7 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
                 if not os.path.isdir(location):
                     os.makedirs(location)
 
-                _file = f"{location}/{name[:4]}-{name[4:6]}-{name[6:]}.csv"
+                _file = f"{location}/{temp[:4]}-{temp[4:6]}-{temp[6:]}.csv"
 
                 # If the file already exists, remove it before creating a new one
                 # and appending to it.
@@ -134,7 +134,7 @@ def _store(start: str, symbols: set, channel: str, path: str, base: str):
                 with open(_file, "a") as out:
                     write = csv.writer(out)
                     write.writerow(row)
-    os.remove(name)
+    os.remove(temp)
 
 
 def poll_data(start: dt, end: dt, symbols: set, channel: str, save_to: str = None):
