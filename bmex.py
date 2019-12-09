@@ -31,10 +31,10 @@ def _validate_dates(start: dt, end: dt):
     today = dt.today()
 
     if end < start:
-        raise Exception("End-date can't be earlier than start-date.")
+        sys.exit("\nError: End-date can't be earlier than start-date.\n")
 
     if start < min_date:
-        raise Exception(f"Start-date can't be earlier than {min_date.date()}")
+        sys.exit(f"\nError: Start-date can't be earlier than {min_date.date()}\n")
 
     if end > today:
         end = today
@@ -55,7 +55,7 @@ def _validate_symbols(symbols: set):
     not_valid = [symb for symb in symbols if symb not in valid]
 
     if not_valid:
-        sys.exit(f"Not valid symbol(s): {not_valid}.")
+        sys.exit(f"\nError: Not valid symbol(s): {not_valid}.\n")
 
 
 def _make_dirs(symbols: set, save_to: str = None):
