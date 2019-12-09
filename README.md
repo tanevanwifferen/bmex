@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/21f103c475e44fa4b30936f06bb5088f)](https://www.codacy.com/manual/dxflores/bmex?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dxflores/bmex&amp;utm_campaign=Badge_Grade)
 # bmex
 
 Lets you download historical data, both [quotes](https://www.bitmex.com/api/explorer/#!/Quote/Quote_get) (top bid/ask) and [trades](https://www.bitmex.com/api/explorer/#!/Trade/Trade_get), for all symbols and indices (including delisted ones) from BitMEX + stores it by creating the directory structure shown below.
