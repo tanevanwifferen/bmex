@@ -30,11 +30,11 @@ def _validate_dates(start: dt, end: dt):
     min_date = dt(2014, 11, 22)
     today = dt.today()
 
-    if end < start:
-        sys.exit("\nError: End-date can't be earlier than start-date.\n")
-
     if start < min_date:
         sys.exit(f"\nError: Start-date can't be earlier than {min_date.date()}\n")
+
+    if end < start:
+        sys.exit("\nError: End-date can't be earlier than start-date.\n")
 
     if end > today:
         end = today
