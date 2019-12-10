@@ -197,8 +197,32 @@ def main(args):
 
     report = {}
     if "trades" in channels:
+        """
+        {
+            "timestamp": "2019-12-10T12:04:54.716Z",
+            "symbol": "string",
+            "side": "string",
+            "size": 0,
+            "price": 0,
+            "tickDirection": "string",
+            "trdMatchID": "string",
+            "grossValue": 0,
+            "homeNotional": 0,
+            "foreignNotional": 0
+        }
+        """
         report["trades"] = poll_data(start, end, symbols, "trade", save_to)
     if "quotes" in channels:
+        """
+        {
+            "timestamp": "2019-12-10T12:04:54.541Z",
+            "symbol": "string",
+            "bidSize": 0,
+            "bidPrice": 0,
+            "askPrice": 0,
+            "askSize": 0
+        }
+        """
         report["quotes"] = poll_data(start, end, symbols, "quote", save_to)
 
     print("-" * 80)
